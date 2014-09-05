@@ -1,16 +1,14 @@
 class ClientsController < ApplicationController
   before_action :set_client, only: [:show, :edit, :update, :destroy]
 
-  # GET /clients
   def index
     @clients = Client.all
   end
 
-  # GET /clients/1
   def show
+    @client = Client.find params[:id]
   end
 
-  # GET /clients/new
   def new
     @client = Client.new
   end
@@ -53,6 +51,6 @@ class ClientsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def client_params
-      params.require(:client).permit(: )
+      params.require(:client).permit(:name, :email, :address_1, :address_2, :address_3, :city, :postcode)
     end
 end
