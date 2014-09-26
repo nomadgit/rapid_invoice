@@ -21,7 +21,7 @@ require 'rails_helper'
 describe ClientsController do
 
   #let(:valid_session) { {} }
-  let(:client) {FactoryGirl.create :client}
+  let(:client) { FactoryGirl.create :client }
   describe "GET index" do
     it 'assigns all clients as @clients' do
       get :index
@@ -53,101 +53,89 @@ describe ClientsController do
     end
   end
 
-  # describe "GET edit" do
-  #   it "assigns the requested client as @client" do
-  #     client = Client.create! valid_attributes
-  #     get :edit, {:id => client.to_param}, valid_session
-  #     expect(assigns(:client)).to eq(client)
-  #   end
-  # end
+  describe "GET edit" do
+    it "assigns the requested client as @client" do
+      get :edit, {:id => client.to_param}
+      expect(assigns(:client)).to eq(client)
+    end
+  end
 
-  # describe "POST create" do
-  #   describe "with valid params" do
-  #     it "creates a new Client" do
-  #       expect {
-  #         post :create, {:client => valid_attributes}, valid_session
-  #       }.to change(Client, :count).by(1)
-  #     end
+  describe "POST create" do
+    describe "with valid attributes" do
+      it "creates a new Client" do
+        expect {
+          post :create, {:client => attributes_for(:client)}
+        }.to change(Client, :count).by(1)
+      end
 
-  #     it "assigns a newly created client as @client" do
-  #       post :create, {:client => valid_attributes}, valid_session
-  #       expect(assigns(:client)).to be_a(Client)
-  #       expect(assigns(:client)).to be_persisted
-  #     end
+      it "redirects to the index page" do
+        post :create, {:client => attributes_for(:client)}
+        expect(response).to redirect_to clients_url
+      end
 
-  #     it "redirects to the created client" do
-  #       post :create, {:client => valid_attributes}, valid_session
-  #       expect(response).to redirect_to(Client.last)
-  #     end
-  #   end
+    end
 
-  #   describe "with invalid params" do
-  #     it "assigns a newly created but unsaved client as @client" do
-  #       post :create, {:client => invalid_attributes}, valid_session
-  #       expect(assigns(:client)).to be_a_new(Client)
-  #     end
+    describe "with invalid params" do
+      it "assigns a newly created but unsaved client as @client" do
+        post :create, {:client => attributes_for(:invalid_client)}
+        expect(assigns(:client)).to be_a_new(Client)
+      end
 
-  #     it "re-renders the 'new' template" do
-  #       post :create, {:client => invalid_attributes}, valid_session
-  #       expect(response).to render_template("new")
-  #     end
-  #   end
-  # end
+      it "re-renders the 'new' template" do
+        post :create, {:client => attributes_for(:invalid_client)}
+        expect(response).to render_template :new
+      end
+    end
+  end
 
-  # describe "PUT update" do
-  #   describe "with valid params" do
-  #     let(:new_attributes) {
-  #       skip("Add a hash of attributes valid for your model")
-  #     }
+  describe "PUT update" do
+    let(:valid_attributes) { attributes_for(:client, email: 'payments@johnnysautos.com')}
 
-  #     it "updates the requested client" do
-  #       client = Client.create! valid_attributes
-  #       put :update, {:id => client.to_param, :client => new_attributes}, valid_session
-  #       client.reload
-  #       skip("Add assertions for updated state")
-  #     end
+    it "assigns the requested client as @client" do
+      put :update, {:id => client.to_param, :client => valid_attributes}
+      expect(assigns(:client)).to eq(client)
+    end
+    describe "with valid attributes" do
+      it "updates the requested client" do
+        put :update, {:id => client.to_param, :client => valid_attributes}
+        client.reload
+        expect(client.email).to eq('payments@johnnysautos.com')
+      end
 
-  #     it "assigns the requested client as @client" do
-  #       client = Client.create! valid_attributes
-  #       put :update, {:id => client.to_param, :client => valid_attributes}, valid_session
-  #       expect(assigns(:client)).to eq(client)
-  #     end
+      it "redirects to the index page" do
+        put :update, {:id => client.to_param, :client => valid_attributes}
+        expect(response).to redirect_to clients_url
+      end
+    end
 
-  #     it "redirects to the client" do
-  #       client = Client.create! valid_attributes
-  #       put :update, {:id => client.to_param, :client => valid_attributes}, valid_session
-  #       expect(response).to redirect_to(client)
-  #     end
-  #   end
+    describe "with invalid params" do
+      let(:invalid_attributes) { attributes_for(:client, email: 'payments@johnnysautos')}
 
-  #   describe "with invalid params" do
-  #     it "assigns the client as @client" do
-  #       client = Client.create! valid_attributes
-  #       put :update, {:id => client.to_param, :client => invalid_attributes}, valid_session
-  #       expect(assigns(:client)).to eq(client)
-  #     end
+      it "does not update the requested client" do
+        put :update, {:id => client.to_param, :client => invalid_attributes}
+        client.reload
+        expect(client.email).to eq('payments@johnnysautos')
+      end
 
-  #     it "re-renders the 'edit' template" do
-  #       client = Client.create! valid_attributes
-  #       put :update, {:id => client.to_param, :client => invalid_attributes}, valid_session
-  #       expect(response).to render_template("edit")
-  #     end
-  #   end
-  # end
+      it "re-renders the 'edit' template" do
+        put :update, {:id => client.to_param, :client => invalid_attributes}
+        expect(response).to render_template("edit")
+      end      
+    end
+  end
 
-  # describe "DELETE destroy" do
-  #   it "destroys the requested client" do
-  #     client = Client.create! valid_attributes
-  #     expect {
-  #       delete :destroy, {:id => client.to_param}, valid_session
-  #     }.to change(Client, :count).by(-1)
-  #   end
+  describe "DELETE destroy" do
+    it "destroys the requested client" do
+      expect {
+        delete :destroy, {:client => client.to_param}
+      }.to change(Client, :count).by(-1)
+    end
 
-  #   it "redirects to the clients list" do
-  #     client = Client.create! valid_attributes
-  #     delete :destroy, {:id => client.to_param}, valid_session
-  #     expect(response).to redirect_to(clients_url)
-  #   end
-  # end
+    it "redirects to the index page" do
+      delete :destroy, {:client => client.to_param}
+      expect(response).to redirect_to clients_url
+    end
+    
+  end
 
 end
