@@ -5,5 +5,9 @@ FactoryGirl.define do
 		city "London" 
 		postcode "SW6 1AB"
 		email "info@johnnysautos.com"
+
+		factory :invalid_client do
+			email "xxx"
+		end
 	end
 end
